@@ -1,60 +1,76 @@
 package com.EmployeeWageOOPs;
 
-class EmpCalculation
+
+public class EmpWageComputation
 {
-    public static final int IS_FULLTIME = 1;
-    public static final int IS_PARTTIME= 2;
-    public static int TOTAL_WAGE = 0;
-    static String company;
-    int empRatePerHour,numOfWorkingDays,maxHrsPerMonth;
-    EmpCalculation(String company, int empRatePerHour,int numOfWorkingDays,int maxHrsPerMonth)
+    public static final int partTime = 1;
+    public static final int fullTime = 2;
+    private final String company;
+    private final int salaryPerHour;
+    private final int workingDays;
+    private final int maxWorkingHours;
+    private int totalEmpWage;
+    public EmpWageComputation(String company, int salaryPerHour, int workingDays,
+                      int maxWorkingHours)
     {
-        EmpCalculation.company = company ;
-        this.empRatePerHour=empRatePerHour;
-        this.numOfWorkingDays=numOfWorkingDays;
-        this.maxHrsPerMonth=maxHrsPerMonth;
+
+        this.company = company;
+        this.salaryPerHour = salaryPerHour;
+        this.workingDays = workingDays;
+        this.maxWorkingHours = maxWorkingHours;
+
     }
-    public void empCheck()
+    public void empWageCal()
     {
-        int	totalworkingDays = 0, empHrs = 0, totalHrs=0, totalDailyWage=0;
-        while (totalworkingDays < numOfWorkingDays  && totalHrs < maxHrsPerMonth)
+        int empHrs = 0, totalEmpHrs = 0, totalWorkingDays = 0;
+
+        while (totalEmpHrs <= maxWorkingHours &&
+                totalWorkingDays < workingDays)
         {
-            totalworkingDays++;
-            System.out.println("For DAY"+totalworkingDays);
-            int empCheck = (int)Math.floor(Math.random() * 10) % 3;
-            switch(empCheck)
+            totalWorkingDays++;
+            int checkEmp = (int) Math.floor(Math.random() * 10) % 3;
+            switch (checkEmp)
             {
-                case IS_FULLTIME:
-                    System.out.println("Employee is present and worked full-time");
+                case fullTime :
+                    System.out.println("Employee is full time present");
                     empHrs = 8;
                     break;
-                case IS_PARTTIME:
-                    System.out.println("Employee is present and worked part-time");
+                case partTime :
                     empHrs = 4;
+                    System.out.println("Employee is part time present");
                     break;
-                default:
+                default :
                     System.out.println("Employee is absent");
                     empHrs = 0;
             }
-            totalDailyWage = empHrs * empRatePerHour;
-            System.out.println("Daily employee wage is "+totalDailyWage);
-            totalHrs = totalHrs + empHrs;
-            TOTAL_WAGE = TOTAL_WAGE + totalDailyWage;
-        }
-        System.out.println("Total Wage of "+EmpCalculation.company+"'s employees in a month = "+EmpCalculation.TOTAL_WAGE);
+            totalEmpHrs += empHrs;
 
+            System.out.println("Employee Working Days : " +totalWorkingDays +
+                    "     Employee Working Hours : " +totalEmpHrs);
+        }
+        totalEmpWage = totalEmpHrs * salaryPerHour;
     }
 
-}
-public class EmpWageComputation
-{
+    @Override
+    public String toString()
+    {
+        return "Total Employee Wage for " +company+ " Company is : " +totalEmpWage;
+    }
     public static void main(String[] args)
     {
 
-        EmpCalculation dmart = new EmpCalculation("D-MART",20,2,10);
-        dmart.empCheck();
-        EmpCalculation reliance = new EmpCalculation("RELIANCE",10,4,20);
-        reliance.empCheck();
+        EmpWageComputation TCS = new EmpWageComputation("TCS", 20, 1, 10);
+        EmpWageComputation Accenture = new EmpWageComputation("Accenture", 10, 2, 20);
+        EmpWageComputation HCL = new EmpWageComputation("HCL", 10, 3, 20);
+        EmpWageComputation Magic = new EmpWageComputation("Magic edTech", 20, 4, 10);
+        TCS.empWageCal();
+        System.out.println(TCS);
+        Accenture.empWageCal();
+        System.out.println(Accenture);
+        HCL.empWageCal();
+        System.out.println(HCL);
+        Magic.empWageCal();
+        System.out.println(Magic);
 
     }
 }
