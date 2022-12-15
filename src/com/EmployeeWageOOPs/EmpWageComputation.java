@@ -1,4 +1,5 @@
 package com.EmployeeWageOOPs;
+
 class CompanyEmpWage
 {
 
@@ -93,4 +94,3 @@ public class EmpWageComputation
         empWageBuild.computeEmpWage();
     }
 }
-
