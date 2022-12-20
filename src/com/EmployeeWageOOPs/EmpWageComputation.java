@@ -1,4 +1,6 @@
 package com.EmployeeWageOOPs;
+
+import java.util.ArrayList;
 class CompanyEmpWage
 {
     // instance constants
@@ -8,7 +10,6 @@ class CompanyEmpWage
     final int WorkingHours;
     // instance variable
     int TotalEmpWage;
-
     CompanyEmpWage(String companyName, int wagePerHr, int workingDays, int workingHours)
     {
         CompanyName = companyName;
@@ -17,12 +18,10 @@ class CompanyEmpWage
         WorkingHours = workingHours;
         TotalEmpWage = 0;
     }
-
     void setTotalEmployeeWage(int TotalEmpWage)
     {
         this.TotalEmpWage = TotalEmpWage;
     }
-
     public String toString()
     {
         System.out.println("Details of " + CompanyName + " employee");
@@ -44,17 +43,15 @@ public class EmpWageComputation implements EmpWageBuilder
     public static final int PART_TIME = 1;
     public static final int FULL_TIME = 2;
     // instance variables
-    int NoOfCompanies, index;
-    CompanyEmpWage[] companies;
+    ArrayList<CompanyEmpWage>companies;
     public EmpWageComputation(int noOfCompanies)
     {
-        this.NoOfCompanies = noOfCompanies;
-        companies = new CompanyEmpWage[noOfCompanies];
-        index = 0;
+        companies = new ArrayList<>();
     }
     public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours)
     {
-        companies[index++] = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
+        CompanyEmpWage company = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
+        companies.add(company);
     }
     int generateEmployeeType()
     {
