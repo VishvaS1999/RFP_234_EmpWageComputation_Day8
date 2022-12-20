@@ -1,96 +1,109 @@
 package com.EmployeeWageOOPs;
-
 class CompanyEmpWage
 {
+    // instance constants
+    final String CompanyName;
+    final int WagePerHour;
+    final int WorkingDays;
+    final int WorkingHours;
+    // instance variable
+    int TotalEmpWage;
 
-    public static final  int partTime=1,fullTime=2;
-    public final String company;
-    public final int salaryPerHour;
-    public final int workingDays;
-    public final int maxWorkingHours;
-    public int totalEmpWage;
-    public CompanyEmpWage (String company ,int salaryPerHour, int workingDays, int maxWorkingHours)
+    CompanyEmpWage(String companyName, int wagePerHr, int workingDays, int workingHours)
     {
+        CompanyName = companyName;
+        WagePerHour = wagePerHr;
+        WorkingDays = workingDays;
+        WorkingHours = workingHours;
+        TotalEmpWage = 0;
+    }
 
-        this.company = company;
-        this.salaryPerHour = salaryPerHour;
-        this.workingDays = workingDays;
-        this.maxWorkingHours = maxWorkingHours;
-    }
-    public void setTotalEmpWage(int totalEmpWage)
+    void setTotalEmployeeWage(int TotalEmpWage)
     {
-        this.totalEmpWage = totalEmpWage;
+        this.TotalEmpWage = TotalEmpWage;
     }
+
     public String toString()
     {
-        return " Total Emp Wage for " + company + " is " + totalEmpWage ;
+        System.out.println("Details of " + CompanyName + " employee");
+        System.out.println("Wage per hour:" + WagePerHour);
+        System.out.println("Maximum working days:" + WorkingDays);
+        System.out.println("Maximum working hours:" + WorkingHours);
+        return "Total wage for a month of " + CompanyName + " employee is " + TotalEmpWage + "\n";
     }
 }
-public class EmpWageComputation
+interface EmpWageBuilder
 {
-    public static final  int partTime=1,fullTime=2;
-    private int numberOfCompany=0;
-    private CompanyEmpWage[] companyEmpWageArray;
-    public EmpWageComputation()
+    public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours);
+
+    public void calculateTotalWage();
+}
+public class EmpWageComputation implements EmpWageBuilder
+{
+    // class constants
+    public static final int PART_TIME = 1;
+    public static final int FULL_TIME = 2;
+    // instance variables
+    int NoOfCompanies, index;
+    CompanyEmpWage[] companies;
+    public EmpWageComputation(int noOfCompanies)
     {
-        companyEmpWageArray = new CompanyEmpWage[5];
+        this.NoOfCompanies = noOfCompanies;
+        companies = new CompanyEmpWage[noOfCompanies];
+        index = 0;
     }
-    private void addCompanyEmpWage(String company ,int salaryPerHour, int workingDays, int maxWorkingHours)
+    public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours)
     {
-
-        companyEmpWageArray[numberOfCompany]= new CompanyEmpWage(company, salaryPerHour, workingDays, maxWorkingHours);
-
-        numberOfCompany ++;
+        companies[index++] = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
     }
-    private void computeEmpWage()
+    int generateEmployeeType()
     {
-
-        for(int i=0;i<numberOfCompany;i++)
+        return (int) (Math.random() * 100) % 3;
+    }
+    int getWorkingHrs(int EmpCheck)
+    {
+        switch (EmpCheck)
         {
-            companyEmpWageArray[i].setTotalEmpWage(this.computeEmpWage(companyEmpWageArray[i]));
-            System.out.println(companyEmpWageArray[i]);
+            case FULL_TIME:
+                return 8;
+            case PART_TIME:
+                return 4;
+            default:
+                return 0;
         }
     }
-    private int computeEmpWage(CompanyEmpWage companyEmpWage)
+    public void calculateTotalWage()
     {
-
-        int empHours=0,totalEmpHours=0,totalWorkingDays=0;
-
-        while(totalWorkingDays < companyEmpWage.workingDays && totalEmpHours <= companyEmpWage.maxWorkingHours) {
-
-            totalWorkingDays ++;
-
-            int empCheck = (int)Math.floor(Math.random() *10 )% 3;
-
-            switch(empCheck)
-            {
-
-                case partTime:
-                    System.out.println("Employee is Present Part Time");
-                    empHours=4;
-                    break;
-
-                case fullTime:
-                    System.out.println("Employee is Present Full Time");
-                    empHours=8;
-                    break;
-
-                default:
-                    System.out.println("Employee is Absent");
-                    empHours=0;
-            }
-            totalEmpHours += empHours;
-            System.out.println("DAY:"+ totalWorkingDays +" Emphrs:" + totalEmpHours);
+        for (CompanyEmpWage company : companies)
+        {
+            int totalWage = calculateTotalWage(company);
+            company.setTotalEmployeeWage(totalWage);
+            System.out.println(company);
         }
-        return totalEmpHours * companyEmpWage.salaryPerHour;
     }
-    public static void main(String[] args)
+    int calculateTotalWage(CompanyEmpWage companyEmpWage)
     {
-        System.out.println("Welcome to Salary Calculator on Master branch");
+        System.out.println("Computation of total wage of " + companyEmpWage.CompanyName + " employee");
+        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
 
-        EmpWageComputation empWageBuild =new EmpWageComputation();
-        empWageBuild.addCompanyEmpWage("TCS",5,2,10);
-        empWageBuild.addCompanyEmpWage("Accenture",3,4,20);
-        empWageBuild.computeEmpWage();
+        int workingHours, TotalWage = 0;
+        for (int day = 1, totalWorkingHrs = 0; day <= companyEmpWage.WorkingDays
+                && totalWorkingHrs <= companyEmpWage.WagePerHour; day++, totalWorkingHrs += workingHours)
+        {
+            int EmpCheck = generateEmployeeType();
+            workingHours = getWorkingHrs(EmpCheck);
+            int wage = workingHours * companyEmpWage.WagePerHour;
+            TotalWage += wage;
+            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHours, wage, totalWorkingHrs + workingHours);
+        }
+        return TotalWage;
+    }
+    public static void main(String args[])
+    {
+        EmpWageComputation employeeWageComputation = new EmpWageComputation(3);
+        employeeWageComputation.addCompany("TCS", 20, 17, 8);
+        employeeWageComputation.addCompany("INFOSYS", 20, 13, 8);
+        employeeWageComputation.addCompany("BTS", 20, 19, 8);
+        employeeWageComputation.calculateTotalWage();
     }
 }
