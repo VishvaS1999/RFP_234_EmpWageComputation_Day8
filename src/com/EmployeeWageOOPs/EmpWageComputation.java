@@ -1,6 +1,8 @@
 package com.EmployeeWageOOPs;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+
 class CompanyEmpWage
 {
     // instance constants
@@ -44,20 +46,27 @@ public class EmpWageComputation implements EmpWageBuilder
     public static final int FULL_TIME = 2;
     // instance variables
     ArrayList<CompanyEmpWage>companies;
-    public EmpWageComputation(int noOfCompanies)
+    HashMap<String, Integer> TotalEmpWage;
+
+    public EmpWageComputation()
     {
         companies = new ArrayList<>();
+        TotalEmpWage = new HashMap<>();
     }
+
     public void addCompany(String companyName, int wagePerHour, int workingDays, int workingHours)
     {
         CompanyEmpWage company = new CompanyEmpWage(companyName, wagePerHour, workingDays, workingHours);
         companies.add(company);
+        TotalEmpWage.put(companyName,0);
     }
+
     int generateEmployeeType()
     {
         return (int) (Math.random() * 100) % 3;
     }
-    int getWorkingHrs(int EmpCheck)
+
+    int getWorkingHours(int EmpCheck)
     {
         switch (EmpCheck)
         {
@@ -69,6 +78,7 @@ public class EmpWageComputation implements EmpWageBuilder
                 return 0;
         }
     }
+
     public void calculateTotalWage()
     {
         for (CompanyEmpWage company : companies)
@@ -78,29 +88,41 @@ public class EmpWageComputation implements EmpWageBuilder
             System.out.println(company);
         }
     }
+
     int calculateTotalWage(CompanyEmpWage companyEmpWage)
     {
         System.out.println("Computation of total wage of " + companyEmpWage.CompanyName + " employee");
-        System.out.printf("%5s     %5s     %5s     %5s\n", "Day", "Workinghrs", "Wage", "Total working hrs");
+        System.out.println("Day" +" \t "+ "WorkingHrs" +" \t "+ "Wage" +" \t "+ "Total working hrs");
 
         int workingHours, TotalWage = 0;
         for (int day = 1, totalWorkingHrs = 0; day <= companyEmpWage.WorkingDays
                 && totalWorkingHrs <= companyEmpWage.WagePerHour; day++, totalWorkingHrs += workingHours)
         {
             int EmpCheck = generateEmployeeType();
-            workingHours = getWorkingHrs(EmpCheck);
+            workingHours = getWorkingHours(EmpCheck);
             int wage = workingHours * companyEmpWage.WagePerHour;
             TotalWage += wage;
-            System.out.printf("%5d       %5d      %5d      %5d\n", day, workingHours, wage, totalWorkingHrs + workingHours);
+            System.out.println(day+ "\t\t\t" +workingHours+ "\t\t\t" +wage+ "\t\t\t" +totalWorkingHrs);
         }
+        TotalEmpWage.put(companyEmpWage.CompanyName, TotalWage);
         return TotalWage;
     }
+    void printTotalEmpWage(){
+        System.out.println();
+        System.out.println("The Companies and their total Employee Wages are:");
+        for (String companyName : TotalEmpWage.keySet())
+        {
+            System.out.println(companyName + ": " + TotalEmpWage.get(companyName));
+        }
+    }
+
     public static void main(String args[])
     {
-        EmpWageComputation employeeWageComputation = new EmpWageComputation(3);
+        EmpWageComputation employeeWageComputation = new EmpWageComputation();
         employeeWageComputation.addCompany("TCS", 20, 17, 8);
         employeeWageComputation.addCompany("INFOSYS", 20, 13, 8);
         employeeWageComputation.addCompany("BTS", 20, 19, 8);
         employeeWageComputation.calculateTotalWage();
+        employeeWageComputation.printTotalEmpWage();
     }
 }
